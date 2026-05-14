@@ -7,6 +7,8 @@
 #include <algorithm> // for std::clamp
 #include <cmath>
 
+#include "degradeCouleur.hpp"
+
 
 std::vector<glm::vec2> generate2DPositions([[maybe_unused]] PointsGenerationParameters const& params) {
     std::vector<glm::vec2> positions {};
@@ -94,20 +96,160 @@ void generateHeightmap(AppContext& context) {
             }
             return masqueDistance*(perlinNoiseSeeded(p * context.imageGenerationParameters.noiseScale, context.imageGenerationParameters.noiseSeed) * 0.5f + 0.5f);
         });
+    
+    //Teste dégradé de couleur
+    std::vector<glm::vec3> couleursIleSRGB = {
+        //Valeur / 255
+        {0.27f, 0.23f, 1.0f}, // mer foncé 
+        {0.36f, 0.94f, 1.0f}, // mer claire
+        {1.0f, 0.66f, 0.26f}, // sable 
+        {0.93f, 0.84f, 0.69f}, // sable 2
+        {0.99f, 0.79f, 0.72f}, // herbe jaune
+        {0.51f, 1.0f, 0.47f},  // herbe verte
+        {0.53f, 0.53f, 0.53f}, //montagne
+        {0.86f, 1.0f, 0.99f} //montagne 2
+    };
+
+    std::vector<glm::vec3> couleursIleLab;
+    for (const auto& couleur : couleursIleSRGB)
+    {
+        //Convertie en linéar
+        glm::vec3 couleursIleLin{
+            srgb_to_linear(couleur.r),
+            srgb_to_linear(couleur.g),
+            srgb_to_linear(couleur.b)
+        };
+
+        //Convertie de Linéar à Lab et les met dans le tableau
+        couleursIleLab.push_back(linear_srgb_to_oklab(couleursIleLin));
+    }
 
     // exemple conversion from heightmap to color image
+
     context.image = TransformImage<float, Color>(context.heightmapImage, [&](float const& v, int const, int const) {
-        if (v < 0.3f)
+        if (v < 0.1)
         {
-            return color_from({ 70, 130, 180 }); // water
+                float v2 = v / 0.1f; // Normalise v entre 0 et 1 dans le segment
+
+                glm::vec3 mer1 = couleursIleLab[0];
+                glm::vec3 mer2 = couleursIleLab[1];
+
+                glm::vec3 couleurLab = glm::mix(mer1, mer2, v2);
+
+                // Retour vers sRGB
+                glm::vec3 couleurLin = oklab_to_linear_srgb(couleurLab);
+
+                glm::vec3 couleurSRGB{
+                    linear_to_srgb(couleurLin.r),
+                    linear_to_srgb(couleurLin.g),
+                    linear_to_srgb(couleurLin.b)
+                };
+
+                // Clamp entre 0 et 1 pour éviter l'erreur de couleur chelou avec du rose et du vert
+                couleurSRGB = glm::clamp(couleurSRGB, 0.0f, 1.0f);
+
+                //Utilise la structure RayLibe, donc color ressemble à : 
+                /*struct Color {
+                    unsigned char r;
+                    unsigned char g;
+                    unsigned char b;
+                    unsigned char a;
+                };*/
+
+                //On convertit tout en unsigned char pour éviter l'erreur
+                return Color{
+                    static_cast<unsigned char>(couleurSRGB.r * 255.f), //Pour inverser le return static_cast<float>(c.r)/255.0f;
+                    static_cast<unsigned char>(couleurSRGB.g * 255.f),
+                    static_cast<unsigned char>(couleurSRGB.b * 255.f),
+                    255 //transparence
+                };
         }
-        else if (v < 0.5f)
+        else if (v < 0.2f) //sable multicolore
         {
-            return color_from({ 238, 214, 175 }); // sand
+                float v2 = (v / 0.1f) / (0.2f/0.1f); 
+                //Pour normaliser on a v2 = (v-a) / (b-a) avec a et b le début des intervalles
+
+                glm::vec3 sable1 = couleursIleLab[2];
+                glm::vec3 sable2 = couleursIleLab[3];
+
+                glm::vec3 couleurLab = glm::mix(sable1, sable2, v2);
+
+                // Retour vers sRGB
+                glm::vec3 couleurLin = oklab_to_linear_srgb(couleurLab);
+
+                glm::vec3 couleurSRGB{
+                    linear_to_srgb(couleurLin.r),
+                    linear_to_srgb(couleurLin.g),
+                    linear_to_srgb(couleurLin.b)
+                };
+
+                // Clamp entre 0 et 1
+                couleurSRGB = glm::clamp(couleurSRGB, 0.0f, 1.0f);
+
+                return Color{
+                    static_cast<unsigned char>(couleurSRGB.r * 255.f), //Pour inverser le return static_cast<float>(c.r)/255.0f;
+                    static_cast<unsigned char>(couleurSRGB.g * 255.f),
+                    static_cast<unsigned char>(couleurSRGB.b * 255.f),
+                    255 //transparence
+                };
         }
-        else
+        else if (v < 0.4f) //Herbe
         {
-            return color_from({ 34, 139, 34 }); // grass
+                float v2 = (v / 0.2f) / (0.4f/0.2f); 
+                //Pour normaliser on a v2 = (v-a) / (b-a) avec a et b le début des intervalles
+
+                glm::vec3 herbe1 = couleursIleLab[4];
+                glm::vec3 herbe2 = couleursIleLab[5];
+
+                glm::vec3 couleurLab = glm::mix(herbe1, herbe2, v2);
+
+                // Retour vers sRGB
+                glm::vec3 couleurLin = oklab_to_linear_srgb(couleurLab);
+
+                glm::vec3 couleurSRGB{
+                    linear_to_srgb(couleurLin.r),
+                    linear_to_srgb(couleurLin.g),
+                    linear_to_srgb(couleurLin.b)
+                };
+
+                // Clamp entre 0 et 1
+                couleurSRGB = glm::clamp(couleurSRGB, 0.0f, 1.0f);
+
+                return Color{
+                    static_cast<unsigned char>(couleurSRGB.r * 255.f), //Pour inverser le return static_cast<float>(c.r)/255.0f;
+                    static_cast<unsigned char>(couleurSRGB.g * 255.f),
+                    static_cast<unsigned char>(couleurSRGB.b * 255.f),
+                    255 //transparence
+                };
+        }
+        else //montagne
+        {
+                float v2 = (v / 0.4f) / (1.0f/0.4f); 
+                //Pour normaliser on a v2 = (v-a) / (b-a) avec a et b le début des intervalles
+
+                glm::vec3 montagne1 = couleursIleLab[6];
+                glm::vec3 montagne2 = couleursIleLab[7];
+
+                glm::vec3 couleurLab = glm::mix(montagne1, montagne2, v2);
+
+                // Retour vers sRGB
+                glm::vec3 couleurLin = oklab_to_linear_srgb(couleurLab);
+
+                glm::vec3 couleurSRGB{
+                    linear_to_srgb(couleurLin.r),
+                    linear_to_srgb(couleurLin.g),
+                    linear_to_srgb(couleurLin.b)
+                };
+
+                // Clamp entre 0 et 1
+                couleurSRGB = glm::clamp(couleurSRGB, 0.0f, 1.0f);
+
+                return Color{
+                    static_cast<unsigned char>(couleurSRGB.r * 255.f), //Pour inverser le return static_cast<float>(c.r)/255.0f;
+                    static_cast<unsigned char>(couleurSRGB.g * 255.f),
+                    static_cast<unsigned char>(couleurSRGB.b * 255.f),
+                    255 //transparence
+                };
         }
         
     }, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
