@@ -9,17 +9,15 @@
 
 
 std::vector<glm::vec2> generate2DPositions([[maybe_unused]] PointsGenerationParameters const& params) {
-    std::vector<glm::vec2> positions {};
-
-    std::vector<glm::vec2> visited {};
+    
 
     // TODO(student): implement Poisson disk sampling to replace the above naive random generation
     // points output should be in [0..1] range, where (0,0) is onoat r = 0.e corner of the terrain and (1,1) is the opposite corner, so they can be easily scaled to terrain size and sampled from heightmap.
-    
+    std::vector<glm::vec2> positions {};
     std::list<glm::vec2> active_list {};
 
 
-    const float r = 0.1;
+    const float r = 0.05;
     const int k = 30;
 
 
@@ -35,8 +33,13 @@ std::vector<glm::vec2> generate2DPositions([[maybe_unused]] PointsGenerationPara
 
     while (!active_list.empty() && positions.size() < 1000)
     {
-        auto current = active_list.back();
-        visited.push_back(current);
+        int index = GetRandomValue(0, active_list.size() - 1);
+        auto it = active_list.begin();
+        std::advance(it, index);
+
+        glm::vec2 current = *it;
+
+        bool is_alive = false;
 
         for (int i = 0; i < k; i++)
         {
@@ -47,14 +50,11 @@ std::vector<glm::vec2> generate2DPositions([[maybe_unused]] PointsGenerationPara
                 current.x + sign_x * static_cast<float>(distribution(gen)),
                 current.y + sign_y * static_cast<float>(distribution(gen))};
 
-            
-
-            
             if (x_candidat.x >= 0 && x_candidat.x <= 1 && x_candidat.y >= 0 && x_candidat.y <= 1)
             {
                 bool is_active = true;
 
-                for (glm::vec2 x : visited)
+                for (glm::vec2 x : positions)
                 {
                     float dist = glm::distance(x_candidat, x);
                     if ( dist < r)
@@ -66,11 +66,14 @@ std::vector<glm::vec2> generate2DPositions([[maybe_unused]] PointsGenerationPara
                 if (is_active)
                 {
                     active_list.push_front(x_candidat);
+                    positions.push_back(x_candidat);
+                    is_alive = true;
                 }   
             } 
         }
-        
-        positions.push_back(current);
+        if(!is_alive) {
+            active_list.erase(it);
+        }
     }
     return positions;
 }
