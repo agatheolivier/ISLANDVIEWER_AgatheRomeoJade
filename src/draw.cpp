@@ -52,6 +52,10 @@ void drawImGui(AppContext& context) {
     if (ImGui::CollapsingHeader("objects", ImGuiTreeNodeFlags_DefaultOpen)) {
         ImGui::SliderFloat("Cube Scale", &context.cubeScale, 0.01f, 1.0f);
     }
+
+    if (ImGui::CollapsingHeader("Poisson", ImGuiTreeNodeFlags_DefaultOpen)) {
+        ImGui::SliderFloat("Poisson radius", &context.pointsGenerationParameters.r, 0.01f, 0.5f);
+    }
 }
 
 void drawRaylibUI(AppContext& context) {
