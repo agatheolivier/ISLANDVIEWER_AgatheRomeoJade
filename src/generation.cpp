@@ -94,7 +94,7 @@ void generateHeightmap(AppContext& context) {
             if (distance < -0.5 || distance > 0.5 ) {
                 masqueDistance = 0;
             }
-            return masqueDistance*(perlinNoiseSeeded(p * context.imageGenerationParameters.noiseScale, context.imageGenerationParameters.noiseSeed) * 0.5f + 0.5f);
+            return masqueDistance*context.changementMasque*(perlinNoiseSeeded(p * context.imageGenerationParameters.noiseScale, context.imageGenerationParameters.noiseSeed) * 0.5f + 0.5f);
         });
     
     //Teste dégradé de couleur

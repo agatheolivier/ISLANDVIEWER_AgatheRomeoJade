@@ -52,6 +52,13 @@ void drawImGui(AppContext& context) {
     if (ImGui::CollapsingHeader("objects", ImGuiTreeNodeFlags_DefaultOpen)) {
         ImGui::SliderFloat("Cube Scale", &context.cubeScale, 0.01f, 1.0f);
     }
+
+    if (ImGui::CollapsingHeader("Apparence de l'île", ImGuiTreeNodeFlags_DefaultOpen)) {
+        if(ImGui::SliderInt("Grandeur de l'île", &context.changementMasque, 1, 5)){
+            generateHeightmap(context);
+            regenerateMeshFromImage(context);
+        }
+    }
 }
 
 void drawRaylibUI(AppContext& context) {
