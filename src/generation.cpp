@@ -17,7 +17,7 @@ std::vector<glm::vec2> generate2DPositions([[maybe_unused]] PointsGenerationPara
     std::list<glm::vec2> active_list {};
 
 
-    const float r = 0.05;
+    float r = params.r;
     const int k = 30;
 
 
