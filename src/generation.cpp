@@ -98,20 +98,32 @@ void generateHeightmap(AppContext& context) {
         });
     
     //Teste dégradé de couleur
-    std::vector<glm::vec3> couleursIleSRGB = {
+    std::vector<std::vector<glm::vec3>> couleursIleSRGB {
+        {
         //Valeur / 255
-        {0.27f, 0.23f, 1.0f}, // mer foncé 
-        {0.36f, 0.94f, 1.0f}, // mer claire
-        {1.0f, 0.66f, 0.26f}, // sable 
-        {0.93f, 0.84f, 0.69f}, // sable 2
-        {0.99f, 0.79f, 0.72f}, // herbe jaune
-        {0.51f, 1.0f, 0.47f},  // herbe verte
-        {0.53f, 0.53f, 0.53f}, //montagne
-        {0.86f, 1.0f, 0.99f} //montagne 2
+            {0.27f, 0.23f, 1.0f}, // mer foncé 
+            {0.36f, 0.94f, 1.0f}, // mer claire
+            {1.0f, 0.66f, 0.26f}, // sable 
+            {0.93f, 0.84f, 0.69f}, // sable 2
+            {0.99f, 0.79f, 0.72f}, // herbe jaune
+            {0.51f, 1.0f, 0.47f},  // herbe verte
+            {0.53f, 0.53f, 0.53f}, //montagne
+            {0.86f, 1.0f, 0.99f} //montagne 2
+        },
+        {
+            {89.0f/255.0f, 95.0f/255.0f, 255.0f/255.0f}, // mer foncé 
+            {187.0f/255.0f, 242.0f/255.0f, 244.0f/255.0f}, // mer claire
+            {0.96f, 0.73f, 0.79f}, // sable rose
+            {244.0f/255.0f, 238.0f/255.0f, 187.0f/255.0f}, // sable 2
+            {179.0f/255.0f, 255.0f/255.0f, 184.0f/255.0f}, // herbe jaune
+            {113.0f/255.0f,220.0f/255.0f,114.0f/255.0f},  // herbe verte
+            {0.65f, 0.65f, 0.65f}, //montagne 2
+            {1.0f, 1.0f, 1.0f}
+        }
     };
 
     std::vector<glm::vec3> couleursIleLab;
-    for (const auto& couleur : couleursIleSRGB)
+    for (const auto& couleur : couleursIleSRGB[context.changementBiome])
     {
         //Convertie en linéar
         glm::vec3 couleursIleLin{

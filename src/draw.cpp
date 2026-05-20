@@ -58,6 +58,14 @@ void drawImGui(AppContext& context) {
             generateHeightmap(context);
             regenerateMeshFromImage(context);
         }
+        if(ImGui::RadioButton("Île de base", &context.changementBiome, 0)){
+            generateHeightmap(context);
+            regenerateMeshFromImage(context);
+        }
+        if(ImGui::RadioButton("Mode pastel", &context.changementBiome, 1)){
+            generateHeightmap(context);
+            regenerateMeshFromImage(context);
+        }
     }
 }
 

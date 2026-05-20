@@ -47,6 +47,7 @@ struct AppContext {
 
     //Apparence de l'île
     int changementMasque = 1;
+    int changementBiome;
 };
 
 Matrix getTerrainCenteringMatrix(AppContext const& context);
