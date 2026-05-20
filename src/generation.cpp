@@ -4,7 +4,8 @@
 #include "raylib.h"
 
 #include "utils/raylibUtils.hpp"
-#include <bits/stdc++.h>
+// #include <bits/stdc++.h>
+#include <random>
 #include <algorithm> // for std::clamp
 
 
@@ -16,10 +17,14 @@ std::vector<glm::vec2> generate2DPositions([[maybe_unused]] PointsGenerationPara
     std::vector<glm::vec2> positions {};
     std::list<glm::vec2> active_list {};
 
-
     float r = params.r;
-    const int k = 30;
+    const int k = params.k;
 
+    float grid_size_squared = pow(r,2) / 2.0f;
+    float cell_size = sqrt(grid_size_squared);
+
+    std::vector<int> line (std::ceil(1/cell_size), -1);
+    std::vector<std::vector<int>> grid (std::ceil(1/cell_size), line);
 
     std::default_random_engine gen;
     std::uniform_real_distribution<double> distribution(r, 2*r);
@@ -30,6 +35,8 @@ std::vector<glm::vec2> generate2DPositions([[maybe_unused]] PointsGenerationPara
 
     active_list.push_back(x0);
     positions.push_back(x0);
+
+    grid[std::floor(x0.x / cell_size)][std::floor(x0.y / cell_size)] = positions.size() - 1;
 
     while (!active_list.empty() && positions.size() < 1000)
     {
@@ -48,25 +55,42 @@ std::vector<glm::vec2> generate2DPositions([[maybe_unused]] PointsGenerationPara
 
             glm::vec2 x_candidat {
                 current.x + sign_x * static_cast<float>(distribution(gen)),
-                current.y + sign_y * static_cast<float>(distribution(gen))};
+                current.y + sign_y * static_cast<float>(distribution(gen))
+            };
+
+            glm::ivec2 x_candidat_grid_position {
+                std::floor(x_candidat.x / cell_size),
+                std::floor(x_candidat.y / cell_size)
+            };
 
             if (x_candidat.x >= 0 && x_candidat.x <= 1 && x_candidat.y >= 0 && x_candidat.y <= 1)
             {
                 bool is_active = true;
-
-                for (glm::vec2 x : positions)
+                for (int i = -2; i < 3; i++)
                 {
-                    float dist = glm::distance(x_candidat, x);
-                    if ( dist < r)
+                    for (int j = -2; j < 3; j++)
                     {
-                        is_active = false;  
-                    }
+                        if (x_candidat_grid_position.x + i >= 0 && x_candidat_grid_position.x + i < grid.size() && x_candidat_grid_position.y + j >=0 && x_candidat_grid_position.y + j < grid.size()) 
+                        {
+                                int index = grid[x_candidat_grid_position.x + i][x_candidat_grid_position.y + j];
+                                if (index >= 0) {
+                                    glm::vec2 y = positions.at(index);
+                                    float dist = glm::distance(x_candidat, y);
+                                    if ( dist < r)
+                                    {
+                                        is_active = false;  
+                                    }
+                                }
+                        }
+                        
+                        
+                    }   
                 }
-
                 if (is_active)
                 {
                     active_list.push_front(x_candidat);
                     positions.push_back(x_candidat);
+                    grid[x_candidat_grid_position.x][x_candidat_grid_position.y] = positions.size() - 1;
                     is_alive = true;
                 }   
             } 
@@ -138,7 +162,9 @@ void generateHeightmap(AppContext& context) {
         [&](glm::vec2 const& p)->float {
             // TODO(student): implement stack based noise and island mask
 
-            return (perlinNoiseSeeded(p * context.imageGenerationParameters.noiseScale, context.imageGenerationParameters.noiseSeed) * 0.5f + 0.5f);
+            return (perlinNoiseSeeded(
+                p * context.imageGenerationParameters.noiseScale, 
+                context.imageGenerationParameters.noiseSeed) * 0.5f + 0.5f);
         });
 
     // exemple conversion from heightmap to color image

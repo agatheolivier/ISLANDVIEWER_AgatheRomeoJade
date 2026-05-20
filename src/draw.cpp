@@ -55,6 +55,7 @@ void drawImGui(AppContext& context) {
 
     if (ImGui::CollapsingHeader("Poisson", ImGuiTreeNodeFlags_DefaultOpen)) {
         ImGui::SliderFloat("Poisson radius", &context.pointsGenerationParameters.r, 0.01f, 0.5f);
+        ImGui::SliderInt("Poisson number of neighbours", &context.pointsGenerationParameters.k, 20, 50);
     }
 }
 
