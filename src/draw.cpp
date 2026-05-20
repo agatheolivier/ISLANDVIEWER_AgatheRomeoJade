@@ -52,6 +52,21 @@ void drawImGui(AppContext& context) {
     if (ImGui::CollapsingHeader("objects", ImGuiTreeNodeFlags_DefaultOpen)) {
         ImGui::SliderFloat("Cube Scale", &context.cubeScale, 0.01f, 1.0f);
     }
+
+    if (ImGui::CollapsingHeader("Noise", ImGuiTreeNodeFlags_DefaultOpen)) {
+    if(ImGui::SliderInt("Nombre d'octaves", &context.nboctaves, 1, 10)){
+        generateHeightmap(context);
+        regenerateMeshFromImage(context);
+    }
+     if(ImGui::SliderFloat("lacunarity", &context.lacunarity, 1, 10)){
+        generateHeightmap(context);
+        regenerateMeshFromImage(context);
+    }
+      if(ImGui::SliderFloat("gain", &context.gain, 0, 1)){
+        generateHeightmap(context);
+        regenerateMeshFromImage(context);
+    }
+    }
 }
 
 void drawRaylibUI(AppContext& context) {
