@@ -53,6 +53,25 @@ void drawImGui(AppContext& context) {
         ImGui::SliderFloat("Cube Scale", &context.cubeScale, 0.01f, 1.0f);
     }
 
+    if (ImGui::CollapsingHeader("Apparence de l'île", ImGuiTreeNodeFlags_DefaultOpen)) {
+        if(ImGui::SliderInt("Grandeur de l'île", &context.changementMasque, 1, 5)){
+            generateHeightmap(context);
+            regenerateMeshFromImage(context);
+        }
+        if(ImGui::RadioButton("Île de base", &context.changementBiome, 0)){
+            generateHeightmap(context);
+            regenerateMeshFromImage(context);
+        }
+        if(ImGui::RadioButton("Mode pastel", &context.changementBiome, 1)){
+            generateHeightmap(context);
+            regenerateMeshFromImage(context);
+        }
+    }
+
+    if (ImGui::CollapsingHeader("Poisson", ImGuiTreeNodeFlags_DefaultOpen)) {
+        ImGui::SliderFloat("Poisson radius", &context.pointsGenerationParameters.r, 0.01f, 0.5f);
+    }
+
     if (ImGui::CollapsingHeader("Noise", ImGuiTreeNodeFlags_DefaultOpen)) {
     if(ImGui::SliderInt("Nombre d'octaves", &context.nboctaves, 1, 10)){
         generateHeightmap(context);

@@ -4,23 +4,80 @@
 #include "raylib.h"
 
 #include "utils/raylibUtils.hpp"
+#include <bits/stdc++.h>
 #include <algorithm> // for std::clamp
+#include <cmath>
 
-std::vector<glm::vec2> generate2DPositions([[maybe_unused]] PointsGenerationParameters const &params)
-{
-    std::vector<glm::vec2> positions{};
+#include "degradeCouleur.hpp"
 
-    positions.reserve(1000);
-    // Naive random generation
-    for (int i{0}; i < 1000; ++i)
-    {
-        positions.emplace_back(
-            static_cast<float>(GetRandomValue(0, INT_MAX)) / static_cast<float>(INT_MAX),
-            static_cast<float>(GetRandomValue(0, INT_MAX)) / static_cast<float>(INT_MAX));
-    }
+
+std::vector<glm::vec2> generate2DPositions([[maybe_unused]] PointsGenerationParameters const& params) {
+    
 
     // TODO(student): implement Poisson disk sampling to replace the above naive random generation
-    // points output should be in [0..1] range, where (0,0) is one corner of the terrain and (1,1) is the opposite corner, so they can be easily scaled to terrain size and sampled from heightmap.
+    // points output should be in [0..1] range, where (0,0) is onoat r = 0.e corner of the terrain and (1,1) is the opposite corner, so they can be easily scaled to terrain size and sampled from heightmap.
+    std::vector<glm::vec2> positions {};
+    std::list<glm::vec2> active_list {};
+
+
+    float r = params.r;
+    const int k = 30;
+
+
+    std::default_random_engine gen;
+    std::uniform_real_distribution<double> distribution(r, 2*r);
+
+    glm::vec2 x0 {
+        static_cast<float>(GetRandomValue(0, INT_MAX)) / static_cast<float>(INT_MAX),
+        static_cast<float>(GetRandomValue(0, INT_MAX)) / static_cast<float>(INT_MAX)};
+
+    active_list.push_back(x0);
+    positions.push_back(x0);
+
+    while (!active_list.empty() && positions.size() < 1000)
+    {
+        int index = GetRandomValue(0, active_list.size() - 1);
+        auto it = active_list.begin();
+        std::advance(it, index);
+
+        glm::vec2 current = *it;
+
+        bool is_alive = false;
+
+        for (int i = 0; i < k; i++)
+        {
+            int sign_x = (GetRandomValue(0, 1) == 1) ? -1 : 1;
+            int sign_y = (GetRandomValue(0, 1) == 1) ? -1 : 1;
+
+            glm::vec2 x_candidat {
+                current.x + sign_x * static_cast<float>(distribution(gen)),
+                current.y + sign_y * static_cast<float>(distribution(gen))};
+
+            if (x_candidat.x >= 0 && x_candidat.x <= 1 && x_candidat.y >= 0 && x_candidat.y <= 1)
+            {
+                bool is_active = true;
+
+                for (glm::vec2 x : positions)
+                {
+                    float dist = glm::distance(x_candidat, x);
+                    if ( dist < r)
+                    {
+                        is_active = false;  
+                    }
+                }
+
+                if (is_active)
+                {
+                    active_list.push_front(x_candidat);
+                    positions.push_back(x_candidat);
+                    is_alive = true;
+                }   
+            } 
+        }
+        if(!is_alive) {
+            active_list.erase(it);
+        }
+    }
     return positions;
 }
 
@@ -92,43 +149,28 @@ void generateHeightmap(AppContext &context)
     
                                                                  
     context.heightmapImage = GenImageFromNoiseFunction<float>(resolution, resolution, PIXELFORMAT_UNCOMPRESSED_R32,
-                                                              [&](glm::vec2 const p) -> float
-                                                              {
-                                                                float perl = perlinNoiseSeeded(p,seed); 
-                                                                // TODO(student): implement stack based noise and island mask
-                                                             
-                                                             return     octaveNoise(
-                                                                      p,                                            
-                                                                      //perlinNoise,
-                                                                      [&](glm::vec2 const p) -> float
-                                                              {
-                                                                return     perlinNoiseSeeded(p,seed);
-                                                              },
-                                                                      context.nboctaves,                                                 
-                                                                      context.lacunarity,                                                
-                                                                      context.gain, noiseScale                                                                                         
-                                                                  );
+        [&](glm::vec2 const& p)->float {
+            // TODO(student): implement stack based noise and island mask
 
-                                                              //    return (perlinNoiseSeeded(p * context.imageGenerationParameters.noiseScale, context.imageGenerationParameters.noiseSeed) * 0.5f + 0.5f);
-                                                              });
+            return (perlinNoiseSeeded(p * context.imageGenerationParameters.noiseScale, context.imageGenerationParameters.noiseSeed) * 0.5f + 0.5f);
+        });
 
     // exemple conversion from heightmap to color image
-    context.image = TransformImage<float, Color>(context.heightmapImage, [&](float const &v, int const, int const)
-                                                 {
-                                                     if (v < 0.3f)
-                                                     {
-                                                         return color_from({70, 130, 180}); // water
-                                                     }
-                                                     else if (v < 0.5f)
-                                                     {
-                                                         return color_from({238, 214, 175}); // sand
-                                                     }
-                                                     else
-                                                     {
-                                                         return color_from({34, 139, 34}); // grass
-                                                     }
-                                                 },
-                                                 PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
+    context.image = TransformImage<float, Color>(context.heightmapImage, [&](float const& v, int const, int const) {
+        if (v < 0.3f)
+        {
+            return color_from({ 70, 130, 180 }); // water
+        }
+        else if (v < 0.5f)
+        {
+            return color_from({ 238, 214, 175 }); // sand
+        }
+        else
+        {
+            return color_from({ 34, 139, 34 }); // grass
+        }
+        
+    }, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
 
     context.texture = LoadTextureFromImage(context.image);
     if (context.model.meshCount > 0)

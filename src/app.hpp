@@ -12,6 +12,7 @@ struct ImageGenerationParameters {
 
 struct PointsGenerationParameters {
     // TODO(student): add parameters for points generation (ex: poisson disk radius, etc).
+    float r {0.08};
 };
 
 struct AppContext {
@@ -49,6 +50,10 @@ struct AppContext {
     float lacunarity = 2.0f;
     float gain = 0.5f;
 
+
+    //Apparence de l'île
+    int changementMasque = 1;
+    int changementBiome;
 };
 
 Matrix getTerrainCenteringMatrix(AppContext const& context);
