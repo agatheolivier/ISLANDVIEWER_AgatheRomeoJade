@@ -153,7 +153,7 @@ void generateHeightmap(AppContext& context) {
     //Teste dégradé de couleur
     std::vector<std::vector<glm::vec3>> couleursIleSRGB {
         {
-        //Valeur / 255
+        //Basique
             {0.27f, 0.23f, 1.0f}, // mer foncé 
             {0.36f, 0.94f, 1.0f}, // mer claire
             {1.0f, 0.66f, 0.26f}, // sable 
@@ -164,6 +164,7 @@ void generateHeightmap(AppContext& context) {
             {0.86f, 1.0f, 0.99f} //montagne 2
         },
         {
+            //Pastel
             {89.0f/255.0f, 95.0f/255.0f, 255.0f/255.0f}, // mer foncé 
             {187.0f/255.0f, 242.0f/255.0f, 244.0f/255.0f}, // mer claire
             {0.96f, 0.73f, 0.79f}, // sable rose
@@ -171,6 +172,17 @@ void generateHeightmap(AppContext& context) {
             {179.0f/255.0f, 255.0f/255.0f, 184.0f/255.0f}, // herbe jaune
             {113.0f/255.0f,220.0f/255.0f,114.0f/255.0f},  // herbe verte
             {0.65f, 0.65f, 0.65f}, //montagne 2
+            {1.0f, 1.0f, 1.0f}
+        },
+        {
+            //Banquise
+            {41.0f/255.0f, 82.0f/255.0f, 136.0f/255.0f}, // mer foncé 
+            {59.0f/255.0f, 134.0f/255.0f, 234.0f/255.0f}, // mer claire
+            {69.0f/255.0f, 119.0f/255.0f, 184.0f/255.0f}, 
+            {156.0f/255.0f, 198.0f/255.0f, 255.0f/255.0f}, 
+            {119.0f/255.0f, 163.0f/255.0f, 209.0f/255.0f}, // herbe jaune
+            {183.0f/255.0f,226.0f/255.0f,227.0f/255.0f},  // herbe verte
+            {153.0f/255.0f, 189.0f/255.0f, 247.0f/255.0f}, //montagne 2
             {1.0f, 1.0f, 1.0f}
         }
     };

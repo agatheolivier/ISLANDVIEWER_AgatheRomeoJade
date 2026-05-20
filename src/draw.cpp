@@ -66,6 +66,10 @@ void drawImGui(AppContext& context) {
             generateHeightmap(context);
             regenerateMeshFromImage(context);
         }
+        if(ImGui::RadioButton("Banquise", &context.changementBiome, 2)){
+            generateHeightmap(context);
+            regenerateMeshFromImage(context);
+        }
     }
 
     if (ImGui::CollapsingHeader("Poisson", ImGuiTreeNodeFlags_DefaultOpen)) {
