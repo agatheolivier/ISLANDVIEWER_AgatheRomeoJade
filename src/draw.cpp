@@ -67,6 +67,10 @@ void drawImGui(AppContext& context) {
             regenerateMeshFromImage(context);
         }
     }
+
+    if (ImGui::CollapsingHeader("Poisson", ImGuiTreeNodeFlags_DefaultOpen)) {
+        ImGui::SliderFloat("Poisson radius", &context.pointsGenerationParameters.r, 0.01f, 0.5f);
+    }
 }
 
 void drawRaylibUI(AppContext& context) {
