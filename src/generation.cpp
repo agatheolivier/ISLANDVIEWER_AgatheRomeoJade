@@ -145,7 +145,7 @@ void generateHeightmap(AppContext& context) {
             float distance  =  glm::distance(p, glm::vec2(0.5, 0.5));
             float masqueDistance = sin(2*M_PI*distance+1.6f)*0.5f+0.5f;
             if (distance < -0.5 || distance > 0.5 ) {
-                masqueDistance = 0;
+                masqueDistance = -masqueDistance;
             }
             return masqueDistance*context.changementMasque*(perlinNoiseSeeded(p * context.imageGenerationParameters.noiseScale, context.imageGenerationParameters.noiseSeed) * 0.5f + 0.5f);
         });
