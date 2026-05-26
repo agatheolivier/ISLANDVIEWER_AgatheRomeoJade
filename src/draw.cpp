@@ -71,6 +71,21 @@ void drawImGui(AppContext& context) {
     if (ImGui::CollapsingHeader("Poisson", ImGuiTreeNodeFlags_DefaultOpen)) {
         ImGui::SliderFloat("Poisson radius", &context.pointsGenerationParameters.r, 0.01f, 0.5f);
     }
+
+    if (ImGui::CollapsingHeader("Noise", ImGuiTreeNodeFlags_DefaultOpen)) {
+    if(ImGui::SliderInt("Nombre d'octaves", &context.nboctaves, 1, 10)){
+        generateHeightmap(context);
+        regenerateMeshFromImage(context);
+    }
+     if(ImGui::SliderFloat("lacunarity", &context.lacunarity, 1, 10)){
+        generateHeightmap(context);
+        regenerateMeshFromImage(context);
+    }
+      if(ImGui::SliderFloat("gain", &context.gain, 0, 1)){
+        generateHeightmap(context);
+        regenerateMeshFromImage(context);
+    }
+    }
 }
 
 void drawRaylibUI(AppContext& context) {

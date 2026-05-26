@@ -46,6 +46,11 @@ struct AppContext {
     // Parameters for island generation
     ImageGenerationParameters imageGenerationParameters;
 
+    int nboctaves = 4;
+    float lacunarity = 2.0f;
+    float gain = 0.5f;
+
+
     //Apparence de l'île
     int changementMasque = 1;
     int changementBiome;
