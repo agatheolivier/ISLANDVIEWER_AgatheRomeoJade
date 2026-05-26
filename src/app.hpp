@@ -52,7 +52,7 @@ struct AppContext {
 
 
     //Apparence de l'île
-    int changementMasque = 1;
+    float changementMasque = 1.0f;
     int changementBiome;
 };
 

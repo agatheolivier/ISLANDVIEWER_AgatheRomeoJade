@@ -152,29 +152,19 @@ void generateHeightmap(AppContext &context)
             //float masqueX = cos(2*M_PI*p.x)*0.5f+0.5f;
             // float masqueY = sin(2*M_PI*p.y+1.6f)*0.5f+0.5f;
             float distance  =  glm::distance(p, glm::vec2(0.5, 0.5));
-            float masqueDistance = sin(2*M_PI*distance+1.6f)*0.5f+0.5f;
-            if (distance < -0.5 || distance > 0.5 ) {
+            float masqueDistance = sin(1.13f*M_PI*distance+1.6f)*0.7f+0.5f;
+            if (masqueDistance == 0 ) {
                 masqueDistance = -masqueDistance;
-            }
-            return masqueDistance*context.changementMasque*(octaveNoise(
-                                                                      p,                                            
-                                                                      //perlinNoise,
-                                                                      [&](glm::vec2 const p) -> float
-                                                              {
-                                                                return perlinNoiseSeeded(p,seed);
-                                                              },
-                                                                      context.nboctaves,                                                 
-                                                                      context.lacunarity,                                                
-                                                                      context.gain, noiseScale                                                                                         
-                                                                  ) * 0.5f + 0.5f);});
-
+            } 
+            return (masqueDistance/context.changementMasque)*(octaveNoise(p, [&](glm::vec2 const p) -> float{return perlinNoiseSeeded(p,seed);},context.nboctaves, context.lacunarity, context.gain, noiseScale) * 0.5f + 0.5f);});
+ 
     //Teste dégradé de couleur
     std::vector<std::vector<glm::vec3>> couleursIleSRGB {
         {
         //Basique
             {0.27f, 0.23f, 1.0f}, // mer foncé 
             {0.36f, 0.94f, 1.0f}, // mer claire
-            {1.0f, 0.66f, 0.26f}, // sable 
+            {254.0f/255.0f, 250.f/255.0f, 128.0/255.0f}, // sable 
             {0.93f, 0.84f, 0.69f}, // sable 2
             {0.99f, 0.79f, 0.72f}, // herbe jaune
             {0.51f, 1.0f, 0.47f},  // herbe verte
@@ -222,7 +212,7 @@ void generateHeightmap(AppContext &context)
     // exemple conversion from heightmap to color image
 
     context.image = TransformImage<float, Color>(context.heightmapImage, [&](float const& v, int const, int const) {
-        if (v < 0.1)
+        if (v < 0.2)
         {
                 float v2 = v / 0.1f; // Normalise v entre 0 et 1 dans le segment
 
@@ -259,7 +249,7 @@ void generateHeightmap(AppContext &context)
                     255 //transparence
                 };
         }
-        else if (v < 0.2f) //sable multicolore
+        else if (v < 0.3f) //sable multicolore
         {
                 float v2 = (v / 0.1f) / (0.2f/0.1f); 
                 //Pour normaliser on a v2 = (v-a) / (b-a) avec a et b le début des intervalles
@@ -288,7 +278,7 @@ void generateHeightmap(AppContext &context)
                     255 //transparence
                 };
         }
-        else if (v < 0.4f) //Herbe
+        else if (v < 0.5f) //Herbe
         {
                 float v2 = (v / 0.2f) / (0.4f/0.2f); 
                 //Pour normaliser on a v2 = (v-a) / (b-a) avec a et b le début des intervalles
