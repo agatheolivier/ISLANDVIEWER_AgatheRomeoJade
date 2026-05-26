@@ -38,8 +38,25 @@ glm::vec2 seedToOffset2D(int seed)
 
 } // namespace
 
+float SimplexNoise(glm::vec2 const& position) {
+    return glm::simplex(position);
+}
+
 float perlinNoise(glm::vec2 const& position) {
     return glm::perlin(position);
+}
+
+float SimplexNoiseSeeded (glm::vec2 const& position, int seed) {
+    // Cache computed offset because the same seed is used for many samples per frame.
+    static int cachedSeed {};
+    static glm::vec2 cachedOffset {};
+
+    if (seed != cachedSeed) {
+        cachedSeed = seed;
+        cachedOffset = seedToOffset2D(seed);
+    }
+
+    return glm::simplex(position + cachedOffset);
 }
 
 float perlinNoiseSeeded (glm::vec2 const& position, int seed) {
