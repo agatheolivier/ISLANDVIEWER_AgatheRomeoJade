@@ -6,6 +6,7 @@
 #include "utils/raylibUtils.hpp"
 #include <bits/stdc++.h>
 #include <algorithm> // for std::clamp
+#include <cmath>
 
 
 std::vector<glm::vec2> generate2DPositions([[maybe_unused]] PointsGenerationParameters const& params) {
@@ -137,8 +138,14 @@ void generateHeightmap(AppContext& context) {
     context.heightmapImage = GenImageFromNoiseFunction<float>(resolution, resolution, PIXELFORMAT_UNCOMPRESSED_R32,
         [&](glm::vec2 const& p)->float {
             // TODO(student): implement stack based noise and island mask
-
-            return (perlinNoiseSeeded(p * context.imageGenerationParameters.noiseScale, context.imageGenerationParameters.noiseSeed) * 0.5f + 0.5f);
+            //float masqueX = cos(2*M_PI*p.x)*0.5f+0.5f;
+            // float masqueY = sin(2*M_PI*p.y+1.6f)*0.5f+0.5f;
+            float distance  =  glm::distance(p, glm::vec2(0.5, 0.5));
+            float masqueDistance = sin(2*M_PI*distance+1.6f)*0.5f+0.5f;
+            if (distance < -0.5 || distance > 0.5 ) {
+                masqueDistance = 0;
+            }
+            return masqueDistance*(perlinNoiseSeeded(p * context.imageGenerationParameters.noiseScale, context.imageGenerationParameters.noiseSeed) * 0.5f + 0.5f);
         });
 
     // exemple conversion from heightmap to color image
