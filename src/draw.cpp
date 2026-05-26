@@ -72,6 +72,11 @@ void drawImGui(AppContext& context) {
         ImGui::SliderFloat("Poisson radius", &context.pointsGenerationParameters.r, 0.01f, 0.5f);
     }
 
+    if (ImGui::CollapsingHeader("Filtre", ImGuiTreeNodeFlags_DefaultOpen)) {
+        ImGui::SliderFloat("Hauteur Minimale", &context.heightMin, 0.0f, context.heightMax);
+        ImGui::SliderFloat("Hauteur Maximale", &context.heightMax, context.heightMin, 1.0f);
+    }
+
     if (ImGui::CollapsingHeader("Noise", ImGuiTreeNodeFlags_DefaultOpen)) {
     if(ImGui::SliderInt("Nombre d'octaves", &context.nboctaves, 1, 10)){
         generateHeightmap(context);

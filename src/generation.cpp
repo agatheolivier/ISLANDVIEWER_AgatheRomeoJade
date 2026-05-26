@@ -11,6 +11,9 @@
 #include <iostream>
 #include <list>
 #include "degradeCouleur.hpp"
+#if defined(_MSC_VER)
+    #include <corecrt_math_defines.h>
+#endif
 
 std::vector<glm::vec2> generate2DPositions([[maybe_unused]] PointsGenerationParameters const &params)
 {
@@ -89,11 +92,15 @@ void generateObjectsPositions(AppContext &context)
     context.objectPositions.reserve(positions.size());
     for (glm::vec2 const &p : positions)
     {
-        context.objectPositions.emplace_back(
+        float height = sampleHeightmap(context, p.x, p.y);
+        if (height <= context.heightMax && height >= context.heightMin) {
+            context.objectPositions.emplace_back(
             p.x, // x
             p.y, // y
             // sample height from heightmap for each point (asuming positions are normalized in [0..1] range)
-            sampleHeightmap(context, p.x, p.y));
+            height);
+        }
+       
     }
     // TODO(student): extension - filter positions by sampled height range.
 }
