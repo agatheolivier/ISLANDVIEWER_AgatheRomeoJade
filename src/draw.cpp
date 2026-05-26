@@ -23,7 +23,7 @@ void draw3DScene(AppContext& context) {
     EndMode3D();
 }
 
-void drawCubes(AppContext const& context, Matrix const& terrainCentering)
+/*void drawCubes(AppContext const& context, Matrix const& terrainCentering)
 {
     if (context.objectPositions.empty()) {
         return;
@@ -41,6 +41,42 @@ void drawCubes(AppContext const& context, Matrix const& terrainCentering)
         Matrix const scale { MatrixScale(context.cubeScale, context.cubeScale, context.cubeScale) };
         Matrix const transform { MatrixMultiply(scale, centeredTranslation) };
         DrawMesh(context.cube, context.cubeMaterial, transform);
+    }
+}*/
+
+void drawCubes(AppContext const& context, Matrix const& terrainCentering)
+{
+    if (context.objectPositions.empty())
+        return;
+
+
+    for (glm::vec3 const& pos : context.objectPositions){
+        float cubeHalfHeight = 0.5f * context.cubeScale;
+
+        Vector3 objectTranslation = {
+            pos.x * context.terrainSize.x,
+            pos.z * context.terrainSize.y + cubeHalfHeight,
+            pos.y * context.terrainSize.z
+        };
+
+        Vector3 centerOffset = {
+            terrainCentering.m12,
+            terrainCentering.m13,
+            terrainCentering.m14
+        };
+
+        objectTranslation.x += centerOffset.x;
+        objectTranslation.y += centerOffset.y;
+        objectTranslation.z += centerOffset.z;
+
+        DrawModelEx(
+            context.treeModel,
+            objectTranslation,
+            {1,0,0},
+            -90.0f,
+            {2.0f,2.0f,2.0f},
+            WHITE
+        );
     }
 }
 

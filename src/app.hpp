@@ -54,6 +54,15 @@ struct AppContext {
     //Apparence de l'île
     float changementMasque = 1.0f;
     int changementBiome;
+
+    //Poisson steve 
+    Model treeModel {};
+
+    ModelAnimation* anims = nullptr;
+    int animCount = 0;
+
+    unsigned int animIndex = 0;
+    unsigned int animFrame = 0;
 };
 
 Matrix getTerrainCenteringMatrix(AppContext const& context);
