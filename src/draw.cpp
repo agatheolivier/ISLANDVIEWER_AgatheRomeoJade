@@ -78,35 +78,45 @@ void drawCubes(AppContext const& context, Matrix const& terrainCentering)
         objectTranslation.y += CentrerTerrain.y;
         objectTranslation.z += CentrerTerrain.z;
 
+        float rotation = GetTime() * 200.0f;
+
         if (context.changementBiome == 0){
-            DrawModel(
+            DrawModelEx(
                 context.modelBiome, //Model
                 objectTranslation, //Position de l'objet
-                3.0f, //Homothétie
+                {0,1,0},
+                rotation,
+                {2.0f,2.0f,2.0f}, //Homothétie
                 WHITE //Garde la texture de base, si aucune en blanc
             );
         }
         else if (context.changementBiome == 1){
-            DrawModel(
+            DrawModelEx(
                 context.modelBiome, //Model
                 objectTranslation, //Position de l'objet
-                0.1, //Homothétie
+                {1,0,0},
+                rotation,
+                {0.1f,0.1f,0.1f}, //Homothétie
                 WHITE //Garde la texture de base, si aucune en blanc
             );
         }
         else if (context.changementBiome == 2){
-            DrawModel(
+            DrawModelEx(
                 context.modelBiome, //Model
                 objectTranslation, //Position de l'objet
-                0.3, //Homothétie
+                {1,0,0},
+                rotation,
+                {0.3, 0.3, 0.3}, //Homothétie
                 WHITE //Garde la texture de base, si aucune en blanc
             );
         }
         else if (context.changementBiome == 3) {
-             DrawModel(
+             DrawModelEx(
                 context.modelBiome, //Model
                 objectTranslation, //Position de l'objet
-                0.3, //Homothétie
+                {1,0,0},
+                rotation,
+                {0.3, 0.3, 0.3},//Homothétie
                 WHITE //Garde la texture de base, si aucune en blanc
             );
         }
