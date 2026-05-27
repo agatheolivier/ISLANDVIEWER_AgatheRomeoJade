@@ -1,10 +1,11 @@
-
 #include "raylib.h"
 #include "rlImGui.h"
 
 #include "app.hpp"
 #include "draw.hpp"
 #include "generation.hpp"
+
+#include "modele3D.hpp"
 
 int main() {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
@@ -27,10 +28,15 @@ int main() {
 
     AppContext context {};
 
-    context.cube = GenMeshCube(1.0f, 1.0f, 1.0f);
+    //Début poisson steve
+    context.modelBiome = Model3DChoix(context);
+
+    //Début cube rouge
+    /*context.cube = GenMeshCube(1.0f, 1.0f, 1.0f);
     context.cubeMaterial = LoadMaterialDefault();
-    context.cubeMaterial.maps[MATERIAL_MAP_DIFFUSE].color = RED;
-    
+    context.cubeMaterial.maps[MATERIAL_MAP_DIFFUSE].color = RED;*/
+    //Fin cube rouge
+
     // Define our custom camera to look into our 3d world
     context.camera = {
         .position={ 18.0f, 21.0f, 18.0f },
@@ -54,7 +60,15 @@ int main() {
 
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
+        //Début poisson steve
+        if (context.animCount > 0){
+            context.animFrame =
+                (context.animFrame + 1) %
+                context.anims[context.animIndex].keyframeCount;
+        }
+        //fin poisson steve
         UpdateCamera(&context.camera, CAMERA_ORBITAL);
+
         BeginDrawing();
 
         ClearBackground(RAYWHITE);

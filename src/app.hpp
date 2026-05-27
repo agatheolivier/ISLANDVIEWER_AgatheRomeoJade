@@ -52,8 +52,17 @@ struct AppContext {
 
 
     //Apparence de l'île
-    int changementMasque = 1;
+    float changementMasque = 1.0f;
     int changementBiome;
+
+    //Poisson steve 
+    Model modelBiome {};
+
+    ModelAnimation* anims = nullptr;
+    int animCount = 0;
+
+    unsigned int animIndex = 0;
+    unsigned int animFrame = 0;
 
     //Filtrage des points
     float heightMin = 0.0;
