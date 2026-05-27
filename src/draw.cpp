@@ -8,6 +8,8 @@
 #include "raylib.h"
 #include "raymath.h"
 
+#include "modele3D.hpp"
+
 void draw3DScene(AppContext& context) {
     ClearBackground(RAYWHITE);
     
@@ -59,24 +61,63 @@ void drawCubes(AppContext const& context, Matrix const& terrainCentering)
             pos.y * context.terrainSize.z
         };
 
-        Vector3 centerOffset = {
-            terrainCentering.m12,
+        //Forme de la matrice dans RayLib
+        /*  m0  m4  m8  m12
+            m1  m5  m9  m13
+            m2  m6  m10 m14
+            m3  m7  m11 m15*/
+        //Pour une translation, on veut m12, m13 et m14
+
+        Vector3 CentrerTerrain = {
+            terrainCentering.m12, 
             terrainCentering.m13,
             terrainCentering.m14
         };
 
-        objectTranslation.x += centerOffset.x;
-        objectTranslation.y += centerOffset.y;
-        objectTranslation.z += centerOffset.z;
+        objectTranslation.x += CentrerTerrain.x;
+        objectTranslation.y += CentrerTerrain.y;
+        objectTranslation.z += CentrerTerrain.z;
 
-        DrawModelEx(
-            context.treeModel,
-            objectTranslation,
-            {1,0,0},
-            -90.0f,
-            {2.0f,2.0f,2.0f},
-            WHITE
-        );
+        if (context.changementBiome == 0){
+            DrawModel(
+                context.modelBiome, //Model
+                objectTranslation, //Position de l'objet
+                3.0f, //Homothétie
+                WHITE //Garde la texture de base, si aucune en blanc
+            );
+        }
+        else if (context.changementBiome == 1){
+            DrawModel(
+                context.modelBiome, //Model
+                objectTranslation, //Position de l'objet
+                0.1, //Homothétie
+                WHITE //Garde la texture de base, si aucune en blanc
+            );
+        }
+        else if (context.changementBiome == 2){
+            DrawModel(
+                context.modelBiome, //Model
+                objectTranslation, //Position de l'objet
+                0.3, //Homothétie
+                WHITE //Garde la texture de base, si aucune en blanc
+            );
+        }
+        else if (context.changementBiome == 3) {
+             DrawModel(
+                context.modelBiome, //Model
+                objectTranslation, //Position de l'objet
+                0.3, //Homothétie
+                WHITE //Garde la texture de base, si aucune en blanc
+            );
+        }
+        else {
+             DrawModel(
+                context.modelBiome, //Model
+                objectTranslation, //Position de l'objet
+                0.5, //Homothétie
+                WHITE //Garde la texture de base, si aucune en blanc
+            );
+        }
     }
 }
 
@@ -97,14 +138,22 @@ void drawImGui(AppContext& context) {
         if(ImGui::RadioButton("Île de base", &context.changementBiome, 0)){
             generateHeightmap(context);
             regenerateMeshFromImage(context);
+            context.modelBiome = Model3DChoix(context);
         }
         if(ImGui::RadioButton("Mode pastel", &context.changementBiome, 1)){
             generateHeightmap(context);
             regenerateMeshFromImage(context);
+            context.modelBiome = Model3DChoix(context);
         }
         if(ImGui::RadioButton("Banquise", &context.changementBiome, 2)){
             generateHeightmap(context);
             regenerateMeshFromImage(context);
+            context.modelBiome = Model3DChoix(context);
+        }
+        if(ImGui::RadioButton("Volcan", &context.changementBiome, 3)){
+            generateHeightmap(context);
+            regenerateMeshFromImage(context);
+            context.modelBiome = Model3DChoix(context);
         }
     }
 

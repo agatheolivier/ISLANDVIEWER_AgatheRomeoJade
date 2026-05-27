@@ -56,7 +56,7 @@ struct AppContext {
     int changementBiome;
 
     //Poisson steve 
-    Model treeModel {};
+    Model modelBiome {};
 
     ModelAnimation* anims = nullptr;
     int animCount = 0;

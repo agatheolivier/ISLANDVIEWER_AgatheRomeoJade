@@ -1,10 +1,11 @@
-
 #include "raylib.h"
 #include "rlImGui.h"
 
 #include "app.hpp"
 #include "draw.hpp"
 #include "generation.hpp"
+
+#include "modele3D.hpp"
 
 int main() {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
@@ -28,14 +29,7 @@ int main() {
     AppContext context {};
 
     //Début poisson steve
-    context.treeModel = LoadModel("../../resources/poisson-steve/source/steve.glb");
-
-    // Charger les animations
-    context.anims = LoadModelAnimations(
-        "../../resources/poisson-steve/source/steve.glb",
-        &context.animCount
-    );
-    //Fin poisson steve
+    context.modelBiome = Model3DChoix(context);
 
     //Début cube rouge
     /*context.cube = GenMeshCube(1.0f, 1.0f, 1.0f);
@@ -66,20 +60,14 @@ int main() {
 
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
-        UpdateCamera(&context.camera, CAMERA_ORBITAL);
-
         //Début poisson steve
         if (context.animCount > 0){
             context.animFrame =
                 (context.animFrame + 1) %
                 context.anims[context.animIndex].keyframeCount;
-            UpdateModelAnimation(
-                context.treeModel,
-                context.anims[context.animIndex],
-                (float)context.animFrame
-            );
         }
         //fin poisson steve
+        UpdateCamera(&context.camera, CAMERA_ORBITAL);
 
         BeginDrawing();
 
