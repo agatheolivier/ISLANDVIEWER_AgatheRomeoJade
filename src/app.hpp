@@ -53,6 +53,7 @@ struct AppContext {
     int noiseType { 0 };
 
 
+
     //Apparence de l'île
     int changementMasque = 1;
     int changementBiome;

@@ -100,6 +100,10 @@ void drawImGui(AppContext& context) {
         generateHeightmap(context);
         regenerateMeshFromImage(context);
     }
+       if(ImGui::SliderFloat("scale", &context.imageGenerationParameters.noiseScale, 0, 10)){
+        generateHeightmap(context);
+        regenerateMeshFromImage(context);
+    }
     }
 }
 
