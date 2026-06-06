@@ -88,6 +88,16 @@ void generateObjectsPositions(AppContext &context)
 {
     std::vector<glm::vec2> const positions{generate2DPositions(context.pointsGenerationParameters)};
 
+    std::vector<std::pair<float, float>> limits {
+        {0.0, 0.25},
+        {0.25, 0.4},
+        {0.2, 1.0},
+        {0.6, 1.0},
+    };
+
+    context.heightMin = limits[context.changementBiome].first;
+    context.heightMax = limits[context.changementBiome].second;
+
     context.objectPositions.clear();
     context.objectPositions.reserve(positions.size());
     for (glm::vec2 const &p : positions)

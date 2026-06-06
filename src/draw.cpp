@@ -139,21 +139,25 @@ void drawImGui(AppContext& context) {
             generateHeightmap(context);
             regenerateMeshFromImage(context);
             context.modelBiome = Model3DChoix(context);
+            generateObjectsPositions(context);
         }
         if(ImGui::RadioButton("Mode pastel", &context.changementBiome, 1)){
             generateHeightmap(context);
             regenerateMeshFromImage(context);
             context.modelBiome = Model3DChoix(context);
+            generateObjectsPositions(context);
         }
         if(ImGui::RadioButton("Banquise", &context.changementBiome, 2)){
             generateHeightmap(context);
             regenerateMeshFromImage(context);
             context.modelBiome = Model3DChoix(context);
+            generateObjectsPositions(context);
         }
         if(ImGui::RadioButton("Volcan", &context.changementBiome, 3)){
             generateHeightmap(context);
             regenerateMeshFromImage(context);
             context.modelBiome = Model3DChoix(context);
+            generateObjectsPositions(context);
         }
     }
 

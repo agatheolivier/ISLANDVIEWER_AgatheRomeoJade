@@ -66,7 +66,7 @@ struct AppContext {
 
     //Filtrage des points
     float heightMin = 0.0;
-    float heightMax = 1.0;
+    float heightMax = 0.25;
 };
 
 Matrix getTerrainCenteringMatrix(AppContext const& context);
