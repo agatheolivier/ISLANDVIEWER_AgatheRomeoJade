@@ -104,7 +104,7 @@ void drawCubes(AppContext const& context, Matrix const& terrainCentering)
             DrawModelEx(
                 context.modelBiome, //Model
                 objectTranslation, //Position de l'objet
-                {1,0,0},
+                {0,0,1},
                 rotation,
                 {0.3, 0.3, 0.3}, //Homothétie
                 WHITE //Garde la texture de base, si aucune en blanc
