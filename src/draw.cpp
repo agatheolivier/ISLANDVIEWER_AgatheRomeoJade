@@ -141,7 +141,7 @@ void drawImGui(AppContext& context) {
     }
 
     if (ImGui::CollapsingHeader("Apparence de l'île", ImGuiTreeNodeFlags_DefaultOpen)) {
-        if(ImGui::SliderFloat("Grandeur de l'île", &context.changementMasque, 1, 2)){
+        if(ImGui::SliderFloat("Réduire l'île", &context.changementMasque, 1, 2)){
             generateHeightmap(context);
             regenerateMeshFromImage(context);
         }
