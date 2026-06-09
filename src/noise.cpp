@@ -138,7 +138,7 @@ float octaveNoise (glm::vec2 const& position, std::function<float(glm::vec2 cons
     glm::vec2 scaledPos = position * scale;
     for (int i = 0; i < nboctaves; i++) {
 
-        value += amplitude * noiseFunction((scaledPos*scale) * frequency);
+        value += amplitude * noiseFunction(scaledPos * frequency);
         totalAmplitude += amplitude;
         frequency *= lacunarity;
         amplitude *= gain;

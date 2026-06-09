@@ -92,7 +92,7 @@ void drawImGui(AppContext& context) {
         generateHeightmap(context);
         regenerateMeshFromImage(context);
     }
-     if(ImGui::SliderFloat("lacunarity", &context.lacunarity, 1, 10)){
+     if(ImGui::SliderFloat("lacunarity", &context.lacunarity, 1, 5)){
         generateHeightmap(context);
         regenerateMeshFromImage(context);
     }

@@ -158,7 +158,6 @@ void generateHeightmap(AppContext &context)
         }
             return masqueDistance*context.changementMasque*(octaveNoise(
                                                                       p,                                            
-                                                                      //perlinNoise,
                                                                       [&](glm::vec2 const p) -> float
                                                               {
           if (context.noiseType == 0) {
