@@ -211,7 +211,7 @@ J’ai choisi de faire le changement de biomes avec des boutons radios et un ID 
 Aucune difficulté rencontrée pour la création des biomes, c’était juste une succession de if. J’ai conscience que sur un plus gros projet, comme un jeu, une solution plus optimisée que d’avoir une succession de if serait mieux. Mais je n’avais pas d’autres idées et le temps limité ne me permettait pas de chercher d’autres solutions.
 Nous avons estimé que dans notre cas, la solution des ID était viable.
 
-## IV. Conclusion "post-mortem"
+## Conclusion "post-mortem"
 
 Nous avons trouvé que la répartition des tâches s'était faite plutôt naturellement. Nous avons bien aimé que nous prennions tous le temps de s’expliquer le fonctionnement de nos parties, de se voir IRL pour régler les interrogations quand il y en avait. Nous avons trouvé que nous avions a été efficace dans la répartition de notre temps, et que nous n'avions pas hésité à s’entraider quand nous en avions besoin, même si chacun avait sa partie. Chaque décision a été commune et nous avons le ressenti que l’opinion de chacun a été respectée.
 
@@ -220,7 +220,7 @@ Nous aurions également aimé mieux gérer le changement de biomes (gros freeze 
 
 En conclusion, c’était agréable de savoir que peu importe les idées farfelus qu’on avait, les autres étaient d’accord pour essayer avec nous, que ça fonctionne ou non à la fin.
 
-## V. Sources
+## Sources
 
 Pour le débug : 
 
