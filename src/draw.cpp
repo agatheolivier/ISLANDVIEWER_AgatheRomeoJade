@@ -181,15 +181,34 @@ void drawImGui(AppContext& context) {
     }
 
     if (ImGui::CollapsingHeader("Noise", ImGuiTreeNodeFlags_DefaultOpen)) {
+
+          if(ImGui::RadioButton("Perlin", &context.noiseType, 0)){
+            generateHeightmap(context);
+            regenerateMeshFromImage(context);
+        }
+         if(ImGui::RadioButton("Simplex", &context.noiseType, 1)){
+            generateHeightmap(context);
+            regenerateMeshFromImage(context);
+        }
+
+          if(ImGui::RadioButton("Perlin+Simplex", &context.noiseType, 2)){
+            generateHeightmap(context);
+            regenerateMeshFromImage(context);
+        }
+
     if(ImGui::SliderInt("Nombre d'octaves", &context.nboctaves, 1, 10)){
         generateHeightmap(context);
         regenerateMeshFromImage(context);
     }
-     if(ImGui::SliderFloat("lacunarity", &context.lacunarity, 1, 10)){
+     if(ImGui::SliderFloat("lacunarity", &context.lacunarity, 1, 5)){
         generateHeightmap(context);
         regenerateMeshFromImage(context);
     }
       if(ImGui::SliderFloat("gain", &context.gain, 0, 1)){
+        generateHeightmap(context);
+        regenerateMeshFromImage(context);
+    }
+       if(ImGui::SliderFloat("scale", &context.imageGenerationParameters.noiseScale, 0, 10)){
         generateHeightmap(context);
         regenerateMeshFromImage(context);
     }

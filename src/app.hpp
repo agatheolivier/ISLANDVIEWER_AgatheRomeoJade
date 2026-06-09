@@ -46,9 +46,12 @@ struct AppContext {
     // Parameters for island generation
     ImageGenerationParameters imageGenerationParameters;
 
+    //noise
     int nboctaves = 4;
     float lacunarity = 2.0f;
     float gain = 0.5f;
+    int noiseType { 0 };
+
 
 
     //Apparence de l'île
