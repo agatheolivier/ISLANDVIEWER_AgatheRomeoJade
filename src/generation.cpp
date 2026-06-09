@@ -167,13 +167,13 @@ void generateHeightmap(AppContext &context)
             // TODO(student): implement stack based noise and island mask
             //float masqueX = cos(2*M_PI*p.x)*0.5f+0.5f;
             // float masqueY = sin(2*M_PI*p.y+1.6f)*0.5f+0.5f;
-            float distance = glm::distance(p, glm::vec2(0.5, 0.5));
-        float masqueDistance = sin(2 * M_PI * distance + 1.6f) * 0.5f + 0.5f;
-        if (distance < -0.5 || distance > 0.5)
+        float distance = glm::distance(p, glm::vec2(0.5, 0.5));
+        float masqueDistance = sin(1.13* M_PI * distance + 1.6f) * 0.7f + 0.5f;
+        if (masqueDistance == 0)
         {
             masqueDistance = -masqueDistance;
         }
-            return masqueDistance*context.changementMasque*(octaveNoise(
+            return (masqueDistance/context.changementMasque)*(octaveNoise(
                                                                       p,                                            
                                                                       [&](glm::vec2 const p) -> float
                                                               {
